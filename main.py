@@ -1,7 +1,9 @@
 import google.generativeai as genai
 
+from key import key
+
 # APIKEY
-key = "REMOVED"
+key = key.GEMINI_API_KEY
 
 genai.configure(api_key=key)
 
