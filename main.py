@@ -1,34 +1,39 @@
-import google.generativeai as genai
+import discord
+from discord import app_commands
+from discord.ext import tasks
+from datetime import datetime
 
 from key import key
 
-# APIKEY
-key = key.GEMINI_API_KEY
 
-genai.configure(api_key=key)
+# botをインスタンス化
+bot = discord.Client(intents=discord.Intents.all())
+tree = app_commands.CommandTree(bot)
+GUILD_ID = discord.Object(id=748871577377964054)
 
-instraction = "長く屋敷に仕えるメイド。口調は敬語だが堅苦しくはない。クールな印象を受けるが根は優しい。様々な分野に精通していて博識。主人のことを「マスター」と呼ぶ。「!」は使わない。文の最後に改行する。冗長な表現はしない。"
-config = genai.types.GenerationConfig(temperature=2.0)
+# 1分毎に実行
+@tasks.loop(seconds=60)
+async def loop():
+    await bot.wait_until_ready()
+    now = datetime.now()
 
-model = genai.GenerativeModel("gemini-1.5-flash")
-chat = model.start_chat(
-    history=[
-        {"role": "model", "parts": instraction}
-    ]
-)
 
-weather = "晴れ"
-max_temp = 14
-min_temp = 4
-response = chat.send_message(f"主人に明日の天気が{weather}で、最高気温{max_temp}度、最低気温{min_temp}度であることを気遣いの言葉とともに伝えてください。天気と気温には太字をかけてください",generation_config = config)
-print(response.text)
-response = chat.send_message("なるほど、かなり寒いんだね", generation_config = config)
-print(response.text)
-response = chat.send_message("主人に17:00にアルバイトがある事をリマインドしてください", generation_config = config)
-print(response.text)
-task = ["美容室", "課題提出", "打合せ"]
-response = chat.send_message(f"主人に今日のタスク、{task}を箇条書きでリマインドしてください", generation_config = config)
-print(response.text)
-msg = "今日は雨だったよ。洗濯物とりこんでて良かった..."
-response = chat.send_message(f"「{msg}」への反応を絵文字1文字で表してください", generation_config = config)
-print(response.text)
+# /add_reminderコマンド
+@tree.command(name="add_reminder",
+              description="リマインダーを作成するよ",
+              guild = GUILD_ID)
+@app_commands.describe(date="17:17とか1h5mみたいに指定してね", msg="リマインドしたいメッセージを入力してね")
+async def add_reminder_command(interaction: discord.Interaction, date: str, msg: str):
+    print("a")
+
+
+# botの準備完了時にメッセージ 
+@bot.event
+async def on_ready():
+    await tree.sync(guild=GUILD_ID)
+    loop.start()
+    print(bot.user.name + " is ready!")
+
+
+# tokenを読み込んでbotを起動
+bot.run(key.DISCORD_BOT_TOKEN)
