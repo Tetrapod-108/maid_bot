@@ -4,7 +4,7 @@ from discord.ext import tasks
 from datetime import datetime
 
 from key import key
-
+import gemini
 
 # botをインスタンス化
 bot = discord.Client(intents=discord.Intents.all())
@@ -19,12 +19,14 @@ async def loop():
 
 
 # /add_reminderコマンド
-@tree.command(name="add_reminder",
-              description="リマインダーを作成するよ",
+@tree.command(name="test",
+              description="会話のテスト",
               guild = GUILD_ID)
-@app_commands.describe(date="17:17とか1h5mみたいに指定してね", msg="リマインドしたいメッセージを入力してね")
-async def add_reminder_command(interaction: discord.Interaction, date: str, msg: str):
-    print("a")
+@app_commands.describe(msg="テキスト")
+async def add_reminder_command(interaction: discord.Interaction, msg: str):
+    await interaction.response.defer()
+    res = gemini.talk(msg)
+    await interaction.followup.send(content = res, ephemeral = True)
 
 
 # botの準備完了時にメッセージ 
