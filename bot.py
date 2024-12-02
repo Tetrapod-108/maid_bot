@@ -3,15 +3,12 @@ from discord import app_commands
 from discord.ext import tasks
 from datetime import datetime
 
+from key import key
 
 # botをインスタンス化
 bot = discord.Client(intents=discord.Intents.all())
 tree = app_commands.CommandTree(bot)
-ALL_GUILD_ID = [
-  discord.Object(id=748871577377964054),
-  discord.Object(id=1006904944873443412)
-]
-GUILD_ID1 = discord.Object(id=748871577377964054)
+GUILD_ID = discord.Object(id=748871577377964054)
 
 
 # 1分毎に実行
@@ -31,7 +28,7 @@ async def loop():
 # /add_reminderコマンド
 @tree.command(name="add_reminder",
               description="リマインダーを作成するよ",
-              guilds = ALL_GUILD_ID)
+              guild = GUILD_ID)
 @app_commands.describe(date="17:17とか1h5mみたいに指定してね", msg="リマインドしたいメッセージを入力してね")
 async def add_reminder_command(interaction: discord.Interaction, date: str, msg: str):
   await interaction.response.defer()
@@ -49,14 +46,12 @@ async def add_reminder_command(interaction: discord.Interaction, date: str, msg:
 # botの準備完了時にメッセージ 
 @bot.event
 async def on_ready():
-  for i in range(0, len(ALL_GUILD_ID)):
-    #tree.clear_commands(guild=ALL_GUILD_ID[i])
-    a = await tree.sync(guild=ALL_GUILD_ID[i])
+  temp = await tree.sync(guild=GUILD_ID)
   loop.start()
-  print(a)
+  print(temp)
   print(bot.user.name + " is ready!")
 
 
 # tokenを読み込んでbotを起動
-token = key.
+token = key.DISCORD_BOT_TOKEN
 bot.run(token)
