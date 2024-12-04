@@ -1,5 +1,6 @@
 import google.generativeai as genai
 
+import chat_history_save_and_load as chsl
 from key import key
 
 
@@ -15,6 +16,6 @@ def talk(msg: str):
         ]
     )
     res = chat.send_message(content = msg, generation_config = CONFIG)
+    history = chat.history
+    print(history)
     return res.text
-
-print(talk("こんにちは"))

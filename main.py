@@ -15,10 +15,8 @@ GUILD_ID = discord.Object(id=748871577377964054)
 @tasks.loop(seconds=60)
 async def loop():
     await bot.wait_until_ready()
-    now = datetime.now()
 
-
-# /add_reminderコマンド
+# /test
 @tree.command(name="test",
               description="会話のテスト",
               guild = GUILD_ID)
@@ -28,6 +26,15 @@ async def add_reminder_command(interaction: discord.Interaction, msg: str):
     res = gemini.talk(msg)
     await interaction.followup.send(content = res, ephemeral = True)
 
+# メンションに反応
+@bot.event
+async def on_message(msg: discord.Message):
+    if msg.author == bot.user:
+        return
+    if msg.mentions.count(bot.user) == 0:
+        return
+    res = gemini.talk(msg.content)
+    await msg.reply(content = res)
 
 # botの準備完了時にメッセージ 
 @bot.event
