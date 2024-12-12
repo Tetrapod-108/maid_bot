@@ -34,8 +34,8 @@ async def on_message(msg: discord.Message):
         return
     if msg.mentions.count(bot.user) == 0:
         return
-    fix_msg = re.sub("", "", msg.content)
-    res = gemini.talk(msg.content)
+    fix_msg = re.sub("<.*>", "", msg.content)
+    res = gemini.talk(fix_msg)
     await msg.reply(content = res)
 
 # botの準備完了時にメッセージ 

@@ -10,12 +10,10 @@ CONFIG = genai.types.GenerationConfig(temperature=2.0)
 def talk(msg: str):
     genai.configure(api_key=key.GEMINI_API_KEY)
     model = genai.GenerativeModel("gemini-1.5-flash")
-    chat = model.start_chat(
-        history=[
-            {"role": "model", "parts": PROMPT}
-        ]
-    )
+    history = chsl.load_gemini_history_from_json("history.json")
+    chat = model.start_chat(history = history)
     res = chat.send_message(content = msg, generation_config = CONFIG)
     history = chat.history
+    chsl.save_gemini_history_to_json(history, "history.json")
     print(history)
     return res.text
