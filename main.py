@@ -16,6 +16,7 @@ GUILD_ID = discord.Object(id=748871577377964054)
 @tasks.loop(seconds=60)
 async def loop():
     await bot.wait_until_ready()
+    
 
 # /test
 @tree.command(name="test",

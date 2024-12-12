@@ -15,5 +15,4 @@ def talk(msg: str):
     res = chat.send_message(content = msg, generation_config = CONFIG)
     history = chat.history
     chsl.save_gemini_history_to_json(history, "history.json")
-    print(history)
     return res.text
