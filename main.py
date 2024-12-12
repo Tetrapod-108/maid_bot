@@ -2,6 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import tasks
 from datetime import datetime
+import re
 
 from key import key
 import gemini
@@ -33,6 +34,7 @@ async def on_message(msg: discord.Message):
         return
     if msg.mentions.count(bot.user) == 0:
         return
+    fix_msg = re.sub("", "", msg.content)
     res = gemini.talk(msg.content)
     await msg.reply(content = res)
 
