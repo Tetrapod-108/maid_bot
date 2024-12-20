@@ -5,7 +5,6 @@ import json
 from google.generativeai.protos import Content, Part
 
 def save_gemini_history_to_json(gemini_history: List[Any], filename: str) -> None:
-    print("Saving gemini_history to JSON. Structure of gemini_history:")
     
     # Contentオブジェクトから必要な情報を抽出
     serializable_history = [
@@ -30,7 +29,6 @@ def load_gemini_history_from_json(filename: str) -> List[Content]:
     try:
         with open(filename, 'r', encoding='utf-8') as f:
             loaded_data = json.load(f)
-        print(f"Successfully loaded from {filename}. Structure of loaded data:")
         
         # JSONデータをContentオブジェクトに変換
         gemini_history = []
@@ -41,5 +39,4 @@ def load_gemini_history_from_json(filename: str) -> List[Content]:
         
         return gemini_history
     except Exception as e:
-        print(f"Error loading from JSON: {e}")
         return []

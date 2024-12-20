@@ -6,6 +6,8 @@ import re
 
 from key import key
 import gemini
+import weather_forecast
+import task
 
 # botをインスタンス化
 bot = discord.Client(intents=discord.Intents.all())
