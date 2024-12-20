@@ -15,7 +15,6 @@ def talk(msg: str, take_over_history: bool = True):
     chat = model.start_chat(history = history)
     res = chat.send_message(content = msg, generation_config = CONFIG)
     history = chat.history
-    #print(history)
     if take_over_history == True:
         chsl.save_gemini_history_to_json(history, "json/history.json")
     return res.text
