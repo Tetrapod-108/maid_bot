@@ -3,7 +3,7 @@ import json
 
 import gemini
 
-def remind_task(now_date: str):
+def remind_task(now_date: datetime.datetime):
     with open("json/task.json") as f:
         data = json.load(f)
     #print(data)
