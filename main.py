@@ -37,7 +37,7 @@ async def add_task_command(interaction: discord.Interaction, name: str, date:str
     format1 = r"([0-9]{1,2})/([0-9]{1,2})"
     format2 = r"([0-9]{1,2}):([0-9]{1,2})"
     if re.fullmatch(format1, date) == None and re.fullmatch(format2, time) == None:
-        msg = gemini.talk("マスターに指示が間違っていることを伝えてください", False)
+        msg = gemini.talk("マスターにされた指示が間違っていることを伝えてください", False)
     elif date == None or (date == None and time == None):
         task.add_task(name, date, time)
         msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
@@ -45,6 +45,17 @@ async def add_task_command(interaction: discord.Interaction, name: str, date:str
         task.add_task(name, date, time)
         msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
     await interaction.followup.send(content = msg, ephemeral = True)
+
+# /complete_taskコマンド
+@tree.command(name="complete_task",
+              description="完了したタスクをリストから削除する",
+              guild=GUILD_ID)
+@app_commands.describe(name="タスクの名前")
+async def remove_task_command(interaction: discord.Interaction, name: str):
+    await interaction.response.defer()
+    msg = task.remove_task(name)
+    await interaction.followup.send(content = msg, ephemeral = True)
+
 
 # /show_taskコマンド
 @tree.command(name="show_task",
@@ -55,8 +66,7 @@ async def show_task_command(interaction: discord.Interaction):
     await interaction.response.defer()
     now = datetime.now()
     msg = task.remind_task(now)
-    ch = bot.get_channel(1319690391251062835)
-    await ch.send(content="<@702791485409722388>\n"+msg)
+    await interaction.followup.send(content = "<@702791485409722388>\n"+msg, ephemeral = True)
 
 # メンションに反応
 @bot.event
