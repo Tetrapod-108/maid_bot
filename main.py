@@ -36,7 +36,10 @@ async def add_task_command(interaction: discord.Interaction, name: str, date:str
     await interaction.response.defer()
     format1 = r"([0-9]{1,2})/([0-9]{1,2})"
     format2 = r"([0-9]{1,2}):([0-9]{1,2})"
-    if re.fullmatch(format1, date) == None and re.fullmatch(format2, time) == None:
+    if date == None or time == None:
+        task.add_task(name, date, time)
+        msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
+    elif re.fullmatch(format1, date) == None and re.fullmatch(format2, time) == None:
         msg = gemini.talk("マスターにされた指示が間違っていることを伝えてください", False)
     elif date == None or (date == None and time == None):
         task.add_task(name, date, time)
@@ -45,6 +48,7 @@ async def add_task_command(interaction: discord.Interaction, name: str, date:str
         task.add_task(name, date, time)
         msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
     await interaction.followup.send(content = msg, ephemeral = True)
+
 
 # /complete_taskコマンド
 @tree.command(name="complete_task",
@@ -68,6 +72,7 @@ async def show_task_command(interaction: discord.Interaction):
     msg = task.remind_task(now)
     await interaction.followup.send(content = "<@702791485409722388>\n"+msg, ephemeral = True)
 
+
 # メンションに反応
 @bot.event
 async def on_message(msg: discord.Message):
@@ -78,6 +83,7 @@ async def on_message(msg: discord.Message):
     fix_msg = re.sub("<.*>", "", msg.content)
     res = gemini.talk(fix_msg)
     await msg.reply(content = res)
+
 
 # botの準備完了時にメッセージ 
 @bot.event
