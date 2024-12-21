@@ -19,16 +19,15 @@ def talk(msg: str, take_over_history: bool = True):
         chsl.save_gemini_history_to_json(history, "json/history.json")
     return res.text
 
-"""
-
-data = [{"id":0,"name":"数学課題提出", "date":"12月13日", "time":"17:00"},
-        {"id":1,"name":"ミーティング", "date":"12月14日", "time":"17:00"}]
-task_str = ""
-for i in range(len(data)):
-    task_str = f"{data[i]["name"]}{data[i]["date"]}{data[i]["time"]}," + task_str
-msg = f"「{task_str}」のようなタスクがあります。マスターへの挨拶、箇条書きで書いたタスクの一覧、気遣いの言葉、という流れでマスターに予定をリマインドしてください。今は12月13日9:00なので、適した挨拶、注意をしてください"
-print(msg)
-print(talk(msg, False))
-#print(talk("こんばんは"))
-
-"""
+if __name__ == "__main__":
+    data = [{"id":0,"name":"数学課題提出", "date":"12月13日", "time":"17:00"},
+            {"id":1,"name":"ミーティング", "date":"12月14日", "time":"17:00"}]
+    task_str = ""
+    for i in range(len(data)):
+        task_str = f"{data[i]["name"]}{data[i]["date"]}{data[i]["time"]}," + task_str
+    #msg = f"「{task_str}」のようなタスクがあります。マスターへの挨拶、箇条書きで書いたタスクの一覧、気遣いの言葉、という流れでマスターに予定をリマインドしてください。今は12月13日9:00なので、適した挨拶、注意をしてください"
+    msg = "「自転車メンテナンス」のタスクをリストに追加しておいてくれるかな？"
+    msg = "マスターに指示が間違っていることを伝えてください"
+    print(msg)
+    print(talk(msg, False))
+    #print(talk("こんばんは"))
