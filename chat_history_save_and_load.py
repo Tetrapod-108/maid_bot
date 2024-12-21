@@ -21,9 +21,8 @@ def save_gemini_history_to_json(gemini_history: List[Any], filename: str) -> Non
     try:
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(serializable_history, f, ensure_ascii=False, indent=2)
-        print(f"Successfully saved to {filename}")
     except Exception as e:
-        print(f"Error saving to JSON: {e}")
+        pass
 
 def load_gemini_history_from_json(filename: str) -> List[Content]:
     try:

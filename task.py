@@ -3,6 +3,8 @@ import json
 
 import gemini
 
+# 関数: remind_task
+# 文を整えた状態でタスクリストを表示する
 def remind_task(input_date: datetime.datetime):
     now_date = input_date.strftime("%m月%d日%H:%M")
     with open("json/task.json") as f:
@@ -16,13 +18,35 @@ def remind_task(input_date: datetime.datetime):
     res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。また、文の間に1行空けないでください")
     return res
 
-def add_task(name: str, date: str, time: str):
+
+# 関数: add_task
+# タスクをリストに追加する
+def add_task(name: str, date: str = None, time: str = None):
     with open("json/task.json") as f:
         data:list = json.load(f)
     data.append({"name":name, "date":date, "time":time})
     with open("json/task.json", "w") as f:
         json.dump(data, f, indent=4)
 
+
+# 関数: remove_task
+# 名前を指定したタスクをリストから削除する
+def remove_task(name: str):
+    flag = 0
+    with open("json/task.json") as f:
+        data:list = json.load(f)
+    for i in range(len(data)):
+        if data[i].get("name") == name:
+            data.remove(data[i])
+            flag = 1
+    if flag == 1:
+        with open("json/task.json", "w") as f:
+            json.dump(data, f, indent=4)
+        return gemini.talk(f"「{name}」のタスクが終わったよ")
+    else:
+        return gemini.talk("マスターにされた指示が間違っていることを伝えてください", False)
+
 if __name__ == "__main__":
-    add_task("線形代数課題", "12月24日", "17:00")
-    print(remind_task(datetime.datetime.now()))
+    add_task("自転車メンテナンス", "12月24日", "17:00")
+    #print(remind_task(datetime.datetime.now()))
+    print(remove_task("自転車メンテナンス"))
