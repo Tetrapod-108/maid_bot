@@ -1,5 +1,6 @@
 import datetime
 import json
+from pathlib import Path
 
 import gemini
 
@@ -7,7 +8,7 @@ import gemini
 # 文を整えた状態でタスクリストを表示する
 def remind_task(input_date: datetime.datetime):
     now_date = input_date.strftime("%m月%d日%H:%M")
-    with open("json/task.json") as f:
+    with open(f"{Path(__file__).parent}/json/task.json") as f:
         data = json.load(f)
     if len(data) == 0:
         res = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now_date}なので、適した挨拶をしてください。")
@@ -22,10 +23,10 @@ def remind_task(input_date: datetime.datetime):
 # 関数: add_task
 # タスクをリストに追加する
 def add_task(name: str, date: str = None, time: str = None):
-    with open("json/task.json") as f:
+    with open(f"{Path(__file__).parent}/json/task.json") as f:
         data:list = json.load(f)
     data.append({"name":name, "date":date, "time":time})
-    with open("json/task.json", "w") as f:
+    with open(f"{Path(__file__).parent}/json/task.json", "w") as f:
         json.dump(data, f, indent=4)
 
 
@@ -33,14 +34,14 @@ def add_task(name: str, date: str = None, time: str = None):
 # 名前を指定したタスクをリストから削除する
 def remove_task(name: str):
     flag = 0
-    with open("json/task.json") as f:
+    with open(f"{Path(__file__).parent}/json/task.json") as f:
         data:list = json.load(f)
     for i in range(len(data)-1):
         if data[i].get("name") == name:
             data.remove(data[i])
             flag = 1
     if flag == 1:
-        with open("json/task.json", "w") as f:
+        with open(f"{Path(__file__).parent}/json/task.json", "w") as f:
             json.dump(data, f, indent=4)
         return gemini.talk(f"「{name}」のタスクが終わったよ")
     else:
