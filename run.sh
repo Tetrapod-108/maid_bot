@@ -1,0 +1,1 @@
+/home/tetrapod/maid_bot/.venv/bin/python3 /home/tetrapod/maid_bot/main.py
