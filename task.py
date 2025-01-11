@@ -6,18 +6,21 @@ import gemini
 
 # 関数: remind_task
 # 文を整えた状態でタスクリストを表示する
-def remind_task():
+def remind_task(list_only: bool, now = None):
+    now_date = now.strftime("%m月%d日%H:%M")
     with open(f"{Path(__file__).parent}/json/task.json") as f:
         data = json.load(f)
     if len(data) == 0:
         res = "タスク無し"
+        if list_only == False:
+            res = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now_date}なので、適した挨拶をしてください。")
         return res
-        #res = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now_date}なので、適した挨拶をしてください。")
     task_str = ""
     for i in data:
         task_str = f"{i["name"]}{i["date"]}{i["time"]}," + task_str
     res = task_str
-    #res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。また、文の間に1行空けないでください")
+    if list_only == False:
+        res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。また、文の間に1行空けないでください")
     return res
 
 
