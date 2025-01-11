@@ -38,16 +38,13 @@ async def add_task_command(interaction: discord.Interaction, name: str, date:str
     format1 = r"([0-9]{1,2})/([0-9]{1,2})"
     format2 = r"([0-9]{1,2}):([0-9]{1,2})"
     if date == None or time == None:
-        task.add_task(name, date, time)
-        msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
+        msg = task.add_task(name, date, time)
     elif re.fullmatch(format1, date) == None and re.fullmatch(format2, time) == None:
         msg = gemini.talk("マスターにされた指示が間違っていることを伝えてください", False)
     elif date == None or (date == None and time == None):
-        task.add_task(name, date, time)
-        msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
+        msg = task.add_task(name, date, time)
     else:
-        task.add_task(name, date, time)
-        msg = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
+        msg = task.add_task(name, date, time)
     await interaction.followup.send(content = msg, ephemeral = True)
 
 
