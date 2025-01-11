@@ -1,6 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import tasks
+from discord.ext import commands
 from datetime import datetime
 import re
 
@@ -10,8 +11,8 @@ import gemini
 import task
 
 # botをインスタンス化
-bot = discord.Client(intents=discord.Intents.all())
-tree = app_commands.CommandTree(bot)
+bot = commands.Bot(command_prefix="", intents=discord.Intents.all())
+tree = bot.tree
 GUILD_ID = discord.Object(id=748871577377964054)
 
 # 1分毎に実行
@@ -25,7 +26,7 @@ async def loop():
         msg = task.remind_task(now)
         ch = bot.get_channel(1319690391251062835)
         await ch.send(content="<@702791485409722388>\n"+msg)
-    
+
 
 # /add_taskコマンド
 @tree.command(name="add_task",
