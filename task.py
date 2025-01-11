@@ -6,8 +6,7 @@ import gemini
 
 # 関数: remind_task
 # 文を整えた状態でタスクリストを表示する
-def remind_task(input_date: datetime.datetime):
-    now_date = input_date.strftime("%m月%d日%H:%M")
+def remind_task():
     with open(f"{Path(__file__).parent}/json/task.json") as f:
         data = json.load(f)
     if len(data) == 0:
