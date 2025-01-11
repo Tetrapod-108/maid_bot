@@ -36,9 +36,9 @@ def remove_task(name: str):
     flag = 0
     with open(f"{Path(__file__).parent}/json/task.json") as f:
         data:list = json.load(f)
-    for i in range(len(data)-1):
-        if data[i].get("name") == name:
-            data.remove(data[i])
+    for i in data:
+        if i["name"] == name:
+            data.remove(i)
             flag = 1
     if flag == 1:
         with open(f"{Path(__file__).parent}/json/task.json", "w") as f:
@@ -48,6 +48,4 @@ def remove_task(name: str):
         return gemini.talk("マスターにされた指示が間違っていることを伝えてください", False)
 
 if __name__ == "__main__":
-    #add_task("自転車メンテナンス", "12月24日", "17:00")
-    print(remind_task(datetime.datetime.now()))
-    #print(remove_task("自転車メンテナンス"))
+    pass

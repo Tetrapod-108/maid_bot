@@ -4,7 +4,7 @@ from discord.ext import tasks
 from datetime import datetime
 import re
 
-from key import key
+import key
 import gemini
 #import weather_forecast
 import task
@@ -21,7 +21,7 @@ async def loop():
     
     # タスクリストをリマインド
     now = datetime.now()
-    if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0)or (now.hour==9 and now.minute==34):
+    if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0):
         msg = task.remind_task(now)
         ch = bot.get_channel(1319690391251062835)
         await ch.send(content="<@702791485409722388>\n"+msg)
