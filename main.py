@@ -24,7 +24,7 @@ async def loop():
     now = datetime.now()
     if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0):
         now = datetime.now().strftime("%m月%d日%H:%M")
-        task_list = task.remind_task()
+        task_list = task.remind_task(True)
         if task_list == "タスク無し":
             msg = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now}なので、適した挨拶をしてください。")
         else:
@@ -72,12 +72,8 @@ async def remove_task_command(interaction: discord.Interaction, name: str):
 @app_commands.describe()
 async def show_task_command(interaction: discord.Interaction):
     await interaction.response.defer()
-    now = datetime.now().strftime("%m月%d日%H:%M")
-    task_list = task.remind_task()
-    if task_list == "タスク無し":
-        msg = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now}なので、適した挨拶をしてください。")
-    else:
-        msg = gemini.talk(f"「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。今は{now}なので、適した挨拶、注意をしてください。また、文の間に1行空けないでください")
+    now = datetime.now()
+    msg = task.remind_task(False, now)
     await interaction.followup.send(content = "<@702791485409722388>\n"+msg, ephemeral = True)
 
 
