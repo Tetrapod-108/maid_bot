@@ -5,7 +5,8 @@ from pathlib import Path
 import gemini
 
 # 関数: remind_task
-# 文を整えた状態でタスクリストを表示する
+# list_onlyがTrueの時、文を整えた状態でタスクリストを返す
+# Falseの時はタスクリストのみを返す
 def remind_task(list_only: bool, now = None):
     now_date = now.strftime("%m月%d日%H:%M")
     with open(f"{Path(__file__).parent}/json/task.json") as f:
