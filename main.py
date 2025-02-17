@@ -22,14 +22,14 @@ async def loop():
     
     # タスクリストをリマインド
     now = datetime.now()
+    #now = datetime(year=2025, month=1, day=12, hour=7, minute=0)
     if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0):
-        now = datetime.now().strftime("%m月%d日%H:%M")
+        now = datetime.now().strftime("%m月%d日%A %H:%M")
         task_list = task.remind_task(True)
         if task_list == "タスク無し":
-            msg = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now}なので、適した挨拶をしてください。")
+            msg = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now}なので、適した挨拶をしてください。また、明日の最高気温は6℃です。言及してなくても構いません。")
         else:
-            msg = gemini.talk(f"「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。今は{now}なので、適した挨拶、注意をしてください。また、文の間に1行空けないでください")
-            msg = task.remind_task(now)
+            msg = gemini.talk(f"「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。また、明日の最高気温は6℃です。今は{now}なので、適した挨拶、注意喚起をしてください。また、文の間に1行空けないでください。")
         ch = bot.get_channel(1319690391251062835)
         await ch.send(content="<@702791485409722388>\n"+msg)
 
