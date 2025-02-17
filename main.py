@@ -33,6 +33,9 @@ async def loop():
         ch = bot.get_channel(1319690391251062835)
         await ch.send(content="<@702791485409722388>\n"+msg)
 
+    # リマインダーをリマインド
+    
+    if (now.hour == ):
 
 # /add_taskコマンド
 @tree.command(name="add_task",
