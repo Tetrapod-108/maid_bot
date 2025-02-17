@@ -8,7 +8,7 @@ import key
 
 PROMPT = \
 "長く屋敷に仕えるメイド。口調は温かみのある敬語。様々な分野に精通していて博識。主人のことを「マスター」と呼ぶ。「!」は使わない。文の最後に改行する。口調の例:「お疲れ様です、マスター。本日は気温差が大きいため、お体に気を付けてお過ごしくださいませ。」"
-CONFIG = genai.types.GenerationConfig(temperature=1.0)
+CONFIG = genai.types.GenerationConfig(temperature=1.5)
 
 def save_gemini_history_to_json(gemini_history: List[Any], filename: str) -> None:
     # Contentオブジェクトから必要な情報を抽出

@@ -8,7 +8,8 @@ import gemini
 # list_onlyがTrueの時、文を整えた状態でタスクリストを返す
 # Falseの時はタスクリストのみを返す
 def remind_task(list_only: bool, now = None):
-    now_date = now.strftime("%m月%d日%H:%M")
+    if now != None:
+        now_date = now.strftime("%m月%d日%H:%M")
     with open(f"{Path(__file__).parent}/json/task.json") as f:
         data = json.load(f)
     if len(data) == 0:
@@ -18,10 +19,16 @@ def remind_task(list_only: bool, now = None):
         return res
     task_str = ""
     for i in data:
-        task_str = f"{i["name"]}{i["date"]}{i["time"]}," + task_str
+        str_date = str(i["date"])
+        str_time = str(i["time"])
+        if i["date"] == None:
+            str_date = ""
+        if i["time"] == None:
+            str_time = ""    
+        task_str = f"{i["name"]}{str_date}{str_time}," + task_str
     res = task_str
     if list_only == False:
-        res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。また、文の間に1行空けないでください")
+        res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの挨拶、箇条書きで書いたタスクの一覧、内容のまとめ、という流れでマスターにタスクをリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。")
     return res
 
 
