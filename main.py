@@ -9,6 +9,7 @@ import key
 import gemini
 #import weather_forecast
 import task
+import reminder
 
 # botをインスタンス化
 bot = commands.Bot(command_prefix="", intents=discord.Intents.all())
@@ -24,18 +25,20 @@ async def loop():
     now = datetime.now()
     #now = datetime(year=2025, month=1, day=12, hour=7, minute=0)
     if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0):
-        now = datetime.now().strftime("%m月%d日%A %H:%M")
+        now_date = datetime.now().strftime("%m月%d日%A %H:%M")
         task_list = task.remind_task(True)
         if task_list == "タスク無し":
-            msg = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now}なので、適した挨拶をしてください。また、明日の最高気温は6℃です。言及してなくても構いません。")
+            msg = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now_date}なので、適した挨拶をしてください。また、明日の最高気温は6℃です。言及してなくても構いません。")
         else:
             msg = gemini.talk(f"「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、箇条書きで書いたタスクの一覧、簡単な気遣いの一文、という流れでマスターに予定をリマインドしてください。また、明日の最高気温は6℃です。今は{now}なので、適した挨拶、注意喚起をしてください。また、文の間に1行空けないでください。")
         ch = bot.get_channel(1319690391251062835)
         await ch.send(content="<@702791485409722388>\n"+msg)
 
     # リマインダーをリマインド
-    
-    if (now.hour == ):
+    msg = reminder.fetch_reminder(now.strftime("%Y-%m-%d %H:%M"))
+    if msg != None:
+        ch = bot.get_channel(1319690391251062835)
+        await ch.send(content="<@702791485409722388>\n"+msg)
 
 # /add_taskコマンド
 @tree.command(name="add_task",
@@ -78,6 +81,18 @@ async def show_task_command(interaction: discord.Interaction):
     now = datetime.now()
     msg = task.remind_task(False, now)
     await interaction.followup.send(content = "<@702791485409722388>\n"+msg, ephemeral = True)
+
+
+# /add_reminderコマンド
+@tree.command(name="add_reminder",
+              description="リマインダーを設定する",
+              guild=GUILD_ID)
+@app_commands.describe(message="リマインドの内容", time="リマインドする時間")
+async def add_task_command(interaction: discord.Interaction, message:str, time:str):
+    await interaction.response.defer()
+    reminder.add_reminder(message, time)
+    msg = "aaa"
+    await interaction.followup.send(content = msg, ephemeral = True)
 
 
 # メンションに反応
