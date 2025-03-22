@@ -6,7 +6,7 @@ from pathlib import Path
 
 import key
 
-with open(f"{Path(__file__).parent}/json/history.json", "r") as f:
+with open(f"{Path(__file__).parent}/json/system_prompt.json", "r") as f:
         PROMPT = f.read()
 CONFIG = genai.types.GenerationConfig(temperature=1.7)
 
