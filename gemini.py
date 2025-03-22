@@ -6,9 +6,10 @@ from pathlib import Path
 
 import key
 
-PROMPT = \
-"長く屋敷に仕えるメイド。口調は温かみのある敬語。様々な分野に精通していて博識。主人のことを「マスター」と呼ぶ。「!」は使わない。文の最後に改行する。口調の例:「お疲れ様です、マスター。本日は気温差が大きいため、お体に気を付けてお過ごしくださいませ。」"
-CONFIG = genai.types.GenerationConfig(temperature=1.5)
+with open(f"{Path(__file__).parent}/json/history.json", "r") as f:
+        PROMPT = f.read()
+CONFIG = genai.types.GenerationConfig(temperature=1.7)
+
 
 def save_gemini_history_to_json(gemini_history: List[Any], filename: str) -> None:
     # Contentオブジェクトから必要な情報を抽出
@@ -45,7 +46,9 @@ def load_gemini_history_from_json(filename: str) -> List[Content]:
 
 def talk(msg: str, take_over_history: bool = True):
     genai.configure(api_key=key.GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel(model_name = "gemini-2.0-flash", 
+                                  generation_config = CONFIG,
+                                  system_instruction = PROMPT)
     history = load_gemini_history_from_json(f"{Path(__file__).parent}/json/history.json")
     chat = model.start_chat(history = history)
     res = chat.send_message(content = msg, generation_config = CONFIG)
@@ -55,4 +58,8 @@ def talk(msg: str, take_over_history: bool = True):
     return res.text
 
 if __name__ == "__main__":
+    now = "17:42"
+    task_list = "ミーティング、名刺デザイン作成"
+    msg = f"[システム: 時間:{now} 天気:晴れ 気温:12℃]「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、簡単な気遣いの一文、タスクについての簡単なまとめ、という流れでマスターに話してください。与えられた情報に適した挨拶、注意喚起をしてください。また、文の間に1行空けないでください。"
+    print(talk(msg, False))
     pass

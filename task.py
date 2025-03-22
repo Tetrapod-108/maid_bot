@@ -15,7 +15,7 @@ def remind_task(list_only: bool, now = None):
     if len(data) == 0:
         res = "タスク無し"
         if list_only == False:
-            res = gemini.talk(f"マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。今は{now_date}なので、適した挨拶をしてください。")
+            res = gemini.talk(f"[システム: 現在の時間:{now_date} 注意: 各文の間に1行空ける必要はありません] マスターへの時間に適した挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。")
         return res
     task_str = ""
     for i in data:
@@ -25,7 +25,7 @@ def remind_task(list_only: bool, now = None):
             str_date = ""
         if i["time"] == None:
             str_time = ""    
-        task_str = f"{i["name"]}{str_date}{str_time}," + task_str
+        task_str = f"・{i["name"]}{str_date}{str_time}\n" + task_str
     res = task_str
     if list_only == False:
         res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの挨拶、箇条書きで書いたタスクの一覧、内容のまとめ、という流れでマスターにタスクをリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。")
@@ -40,7 +40,7 @@ def add_task(name: str, date: str = None, time: str = None):
     data.append({"name":name, "date":date, "time":time})
     with open(f"{Path(__file__).parent}/json/task.json", "w") as f:
         json.dump(data, f, indent=4)
-    res = gemini.talk(f"「{name}」のタスクをリストに追加してくれる？")
+    res = gemini.talk(f"「{name}」のタスクをリストに追加してください")
     return res
 
 # 関数: remove_task
