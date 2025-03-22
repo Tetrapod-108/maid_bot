@@ -25,7 +25,7 @@ def remind_task(list_only: bool, now = None):
             str_date = ""
         if i["time"] == None:
             str_time = ""    
-        task_str = f"・{i["name"]}{str_date}{str_time}\n" + task_str
+        task_str = f"**・{i["name"]}{str_date}{str_time}**\n" + task_str
     res = task_str
     if list_only == False:
         res = gemini.talk(f"「{task_str}」のようなタスクがあります。マスターへの挨拶、箇条書きで書いたタスクの一覧、内容のまとめ、という流れでマスターにタスクをリマインドしてください。今は{now_date}なので、適した挨拶、注意をしてください。")

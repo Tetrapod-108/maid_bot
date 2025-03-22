@@ -24,14 +24,15 @@ async def loop():
     
     # タスクリストをリマインド
     now = datetime.now()
+    #now = datetime(year=2025, month=3, day=22, hour=21, minute=0)
     if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0):
         now_date = datetime.now().strftime("%m月%d日%A %H:%M")
         task_list = task.remind_task(True)
         if task_list == "タスク無し":
-            msg = gemini.talk(f"[システム: 時間:{now}] マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。与えられた情報に適した挨拶をしてください。")
+            msg = gemini.talk(f"[システム: 時間:{now_date}] マスターへの挨拶、簡単な気遣いの言葉、という順でマスターにとくに予定がないことを通知してください。与えられた情報に適した挨拶をしてください。")
         else:
-            msg = gemini.talk(f"[システム: 時間:{now}]「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、簡単な気遣いの一文、タスクについての簡単なまとめ、という流れでマスターに話してください。与えられた情報に適した挨拶、注意喚起をしてください。また、文の間に1行空けないでください。")
-            msg = "<@702791485409722388>\n" + msg + "\n" + task_list
+            msg = gemini.talk(f"[システム: 時間:{now_date}] マスターが取り組むべきタスクは以下のようになっています。「{task_list}」マスターへの簡単な挨拶、簡単な気遣いの一文、タスクについての簡単なまとめの一文、という流れでマスターに話してください。与えられた情報に適した挨拶、注意喚起をしてください。")
+            msg = "<@702791485409722388>\n" + msg + "\n\n" + task_list
         ch = bot.get_channel(1319690391251062835)
         await ch.send(content=msg)
 
