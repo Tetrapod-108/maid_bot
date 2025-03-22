@@ -81,6 +81,8 @@ def add_reminder(name: str, in_date: str):
     data.append({"name":name, "date":date})
     with open(f"{Path(__file__).parent}/json/reminder.json", "w") as f:
         json.dump(data, f, indent=4)
+    
+    return date
 
 # 関数: fetch_reminder
 # 日時を参照してリマインドをリストから取り出す
