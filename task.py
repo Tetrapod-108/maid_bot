@@ -40,7 +40,7 @@ def add_task(name: str, date: str = None, time: str = None):
     data.append({"name":name, "date":date, "time":time})
     with open(f"{Path(__file__).parent}/json/task.json", "w") as f:
         json.dump(data, f, indent=4)
-    res = gemini.talk(f"「{name}」のタスクをリストに追加してください")
+    res = gemini.talk(f"「{name}」のタスクをリストに追加してください。リストは表示しないでください。追加されたタスクについて簡単にコメントしてください")
     return res
 
 # 関数: remove_task
@@ -56,7 +56,7 @@ def remove_task(name: str):
     if flag == 1:
         with open(f"{Path(__file__).parent}/json/task.json", "w") as f:
             json.dump(data, f, indent=4)
-        return gemini.talk(f"「{name}」のタスクが終わったよ")
+        return gemini.talk(f"「{name}」のタスクをリストから削除してください。リストは表示しないでください。完了したタスクについて簡単にコメントしてください")
     else:
         return gemini.talk("マスターにされた指示が間違っていることを伝えてください", False)
 
