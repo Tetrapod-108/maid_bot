@@ -16,10 +16,14 @@ bot = commands.Bot(command_prefix="", intents=discord.Intents.all())
 tree = bot.tree
 GUILD_ID = discord.Object(id=748871577377964054)
 
+RESPONSE_MODE = 0
+response_mode_timer = 0
 
 # 1分毎に実行
 @tasks.loop(seconds=60)
 async def loop():
+    global RESPONSE_MODE
+    global response_mode_timer
     await bot.wait_until_ready()
     
     # タスクリストをリマインド
@@ -41,6 +45,13 @@ async def loop():
     if msg != None:
         ch = bot.get_channel(1352610162430578710)
         await ch.send(content="<@702791485409722388>\n"+msg)
+
+    # RESPONSE_MODEの処理
+    if response_mode_timer > 0:
+        await bot.change_presence(activity=discord.Activity(name="テスト"))
+        response_mode_timer -= 1
+    elif response_mode_timer == 0:
+        RESPONSE_MODE = 0
 
 
 # /add_taskコマンド
@@ -101,15 +112,32 @@ async def add_task_command(interaction: discord.Interaction, time:str, message:s
     await interaction.followup.send(content = msg, ephemeral = True)
 
 
-# メンションに反応
 @bot.event
 async def on_message(msg: discord.Message):
+    global RESPONSE_MODE
+    global response_mode_timer
     if msg.author == bot.user:
         return
-    if msg.mentions.count(bot.user) == 0:
+    
+    if RESPONSE_MODE == 1:
+        now_date = datetime.now().strftime("%Y/%m/$d %H:%M")
+        res = gemini.talk(f"[システム: 現在の時刻:{now_date}]" + msg.content)
+        await msg.reply(content = res)
+        response_mode_timer = 5
         return
-    fix_msg = re.sub("<.*>", "", msg.content)
-    res = gemini.talk(fix_msg)
+
+    #if msg.mentions.count(bot.user) == 0:
+    #    return
+    if msg.channel.id != 1319690391251062835:
+        print("aaa")
+        return
+    
+    # メンションに反応
+    #fix_msg = re.sub("<.*>", "", msg.content)
+    now_date = datetime.now().strftime("%Y/%m/$d %H:%M")
+    res = gemini.talk(f"[システム: 現在の時刻:{now_date}]" + msg.content)
+    RESPONSE_MODE = 1
+    response_mode_timer = 5
     await msg.reply(content = res)
 
 
