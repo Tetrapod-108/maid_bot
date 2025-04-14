@@ -61,6 +61,8 @@ def add_reminder(name: str, in_date: str):
         delta_day = 0
         if now.hour > set_hour:
             delta_day = 1
+        if now.hour == set_hour and now.minute > set_minute:
+            delta_day = 1
         delta = timedelta(days = delta_day, hours = hour, minutes = minute)
         set_date = now + delta
         set_date = set_date.replace(hour = set_hour)
