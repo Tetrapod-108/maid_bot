@@ -95,7 +95,7 @@ async def show_task_command(interaction: discord.Interaction):
     now = datetime.now()
     task_list = task.remind_task(True)
     msg = gemini.talk(f"[システム: 現在の時間:{now} 注意:各文の間に1行空ける必要はありません]「{task_list}」のようなタスクがあります。マスターへの簡単な挨拶、簡単な気遣いの一文、タスクについての簡単なまとめ、という流れでマスターに話してください。与えられた情報に適した挨拶、注意喚起をしてください。")
-    msg = "<@702791485409722388>\n" + msg + "\n" + task_list
+    msg = "<@702791485409722388>\n" + msg + "\n\n" + task_list
     await interaction.followup.send(content = msg, ephemeral = True)
 
 
