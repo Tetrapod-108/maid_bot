@@ -44,13 +44,14 @@ if __name__ == "__main__":
     jma_json = requests.get(jma_url).json()
 
     # 取得したいデータを選ぶ
-    jma_date = jma_json[0]["timeSeries"][0]["timeDefines"][0]
-    jma_weather = jma_json[0]["timeSeries"][0]["areas"][0]["weathers"][0]
+    jma_date = jma_json[0]["timeSeries"][0]["timeDefines"][1]
+    jma_weather = jma_json[0]["timeSeries"][0]["areas"][2]["weathers"][1]
+    jma_temp = jma_json[0]["timeSeries"][2]["areas"][0]["temps"]
     #jma_rainfall = jma_json["Feature"][0]["Property"]["WeatherList"]["Weather"][0]["Rainfall"]
     # 全角スペースの削除
-    jma_weather = jma_weather.replace('　', '')
+    #jma_weather = jma_weather.replace('　', '')
 
 
     print(jma_date)
     print(jma_weather)
-    #print(jma_rainfall)
+    print(jma_temp)
