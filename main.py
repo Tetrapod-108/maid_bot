@@ -48,7 +48,6 @@ async def loop():
 
     # RESPONSE_MODEの処理
     if response_mode_timer > 0:
-        await bot.change_presence(activity=discord.Activity(name="テスト"))
         response_mode_timer -= 1
     elif response_mode_timer == 0:
         RESPONSE_MODE = 0
@@ -134,7 +133,7 @@ async def on_message(msg: discord.Message):
     
     # メンションに反応
     #fix_msg = re.sub("<.*>", "", msg.content)
-    now_date = datetime.now().strftime("%Y/%m/$d %H:%M")
+    now_date = datetime.now().strftime("%Y/%m/%d %H:%M")
     res = gemini.talk(f"[システム: 現在の時刻:{now_date}]" + msg.content)
     RESPONSE_MODE = 1
     response_mode_timer = 5
