@@ -7,8 +7,8 @@ from pathlib import Path
 
 import key
 
-CONFIG = genai.types.GenerationConfig(temperature=1.7)
-PROMPT = "アシスタントAIとそのマスターの会話記録を示します。どんな出来事があったのか分かるように2000文字ほどに要約してください\n"
+CONFIG = genai.types.GenerationConfig(temperature=0.1)
+PROMPT = "アシスタントAIとそのマスターの会話記録を示します。LLMのヒストリーに渡してやりとりの記憶を引き継ぐために、会話の内容を4000字以下に整理してください。LLMが認識しやすい書式で出力してください\n"
 
 def summary(msg: str):
     genai.configure(api_key=key.GEMINI_API_KEY)
@@ -21,11 +21,11 @@ def summary(msg: str):
     return res.text
 
 if __name__ == "__main__":
-    client = genai.Client(api_key=key.GEMINI_API_KEY)
+    genai.configure(api_key=key.GEMINI_API_KEY)
+    model = genai.GenerativeModel(model_name = "gemini-2.5-pro-exp-03-25", 
+                                  generation_config = CONFIG,
+                                  system_instruction = PROMPT)
     with open("json/history.json", "r") as f:
         data = f.read()
-    response = client.models.generate_content(
-    model="gemini-2.0-pro",
-    contents=[data]
-    )
+    response = model.generate_content(PROMPT+str(data))
     print(response.text)
