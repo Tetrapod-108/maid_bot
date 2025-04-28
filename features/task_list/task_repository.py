@@ -1,5 +1,5 @@
 import json
-import task
+from features.task_list import task
 
 # Taskオブジェクトとjsonファイルを接続するユースケース
 class TaskRepository():

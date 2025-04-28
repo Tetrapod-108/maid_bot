@@ -13,19 +13,21 @@ class GeminiChatService:
         self.client = genai.Client(api_key=self.api_key)
         self.prompt = prompt
         self.model = model
-        self.history_registory = HistoryRegistory(history_file_path)
+        self.history_registory = HistoryRepository(history_file_path)
     
     # メタ情報とシステムメッセージ、ユーザーからのメッセージを渡して返答を生成
     def talk(self, metadata: str, system_msg: str = "", msg: str = ""):
-        chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=metadata+system_msg+self.prompt), history=self.history_registory.load())
-        res = chat.send_message(msg)
+        #print(metadata+system_msg+self.prompt)
+        #chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=metadata+system_msg+self.prompt), history=self.history_registory.load())
+        chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7), history=self.history_registory.load())
+        res = chat.send_message(metadata+system_msg+self.prompt)
         history = chat.get_history()
         self.history_registory.save(history)
         return res.text
     
 
 # chatのhistoryをjsonに保存するためのユースケース
-class HistoryRegistory:
+class HistoryRepository:
     # コンストラクタ
     def __init__(self, file_path: str):
         self.file_path = file_path
@@ -66,12 +68,11 @@ class HistoryRegistory:
     
 
 if __name__ == "__main__":
-    with open(f"{Path(__file__).parent}/json/system_prompt_new.json", "r") as f:
+    with open(f"{Path(__file__).parent}/json/system_prompt_new.json", "r", encoding="utf-8") as f:
         PROMPT = f.read()
     gemini = GeminiChatService(api_key=key.GEMINI_API_KEY, model="gemini-2.0-flash", prompt=PROMPT, history_file_path=f"{Path(__file__).parent}/json/history_new.json")
-    print(gemini.talk(metadata = "{metadata:[{'now_date':'2025-04-24 0:58'}]}", system_msg="{system_message:'マスターが取り組んでいる「課題提出」のタスクの締め切りが近いようです。マスターにその旨を伝えてください'}"))
-    print(gemini.talk(metadata = "{metadata:[{'now_date':'2025-04-25 0:58'}]}", system_msg="{system_message:'マスターが以前取り組んでいた「課題提出」のタスクは間に合わなかったようです。落ち込んでいるマスターを慰めてください'}"))
-    #print(gemini.talk(metadata = "{metadata:[{'now_date':'2025-04-25 0:58'}]}", msg = "うん、頑張る！！"))
+    print(gemini.talk(metadata = "{metadata:[{'now_date':'2025-04-24 0:58'}]}", system_msg="{system_message:'あなたの自己紹介をしてください'}"))
+    
     
     
 

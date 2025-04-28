@@ -3,7 +3,7 @@ import json
 
 
 # chatのhistoryをjsonに保存するためのユースケース
-class HistoryRegistory:
+class HistoryRepository:
     # コンストラクタ
     def __init__(self, file_path: str):
         self.file_path = file_path
