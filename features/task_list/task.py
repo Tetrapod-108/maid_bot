@@ -27,4 +27,4 @@ class Task():
             date = ""
         if self.time == None:
             time = ""
-        return f"{self.name}{date}{time}"
+        return f"{self.name} {date}{time}"

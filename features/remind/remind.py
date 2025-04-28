@@ -5,23 +5,25 @@ import re
 # リマインドのドメインクラス
 class Remind():
     # コンストラクタ
-    def __init__(self, name: str, date: datetime.datetime):
+    def __init__(self, name: str, date: datetime.datetime, user: str, ch: str):
         self.name = name
         self.date: datetime.datetime = date
+        self.user = user
+        self.ch = ch
 
     # 適切な辞書型からインスタンスを作成
     @classmethod
     def import_from_dict(cls, data: dict) -> "Remind":
         try:
             date_format = "%Y-%m-%d %H:%M"
-            return cls(name = data["name"], date = datetime.datetime.strptime(data["date"], date_format))
+            return cls(name = data["name"], date = datetime.datetime.strptime(data["date"], date_format), user = data["user"], ch = data["ch"])
         except KeyError as e:
             raise
     
     # 情報を辞書型にエクスポート
     def export_to_dict(self) -> dict:
         date_format = "%Y-%m-%d %H:%M"
-        return_dict = {"name": self.name, "date": self.date.strftime(date_format)}
+        return_dict = {"name": self.name, "date": self.date.strftime(date_format), "user": self.user, "ch": self.ch}
         return return_dict
 
     # 時刻情報をin_dateに基づいて編集

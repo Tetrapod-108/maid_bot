@@ -1,23 +1,40 @@
 from google import genai
 from google.genai import types
+import datetime
+import json
 
-import history_registory
+#import features.remind.remind
+from features.gemini import history_repository
 
 
 # Gemini APIのラッパー
 class GeminiChatService:
     # コンストラクタ
-    def __init__(self, api_key: str, model: str, prompt: str, history_file_path: str):
+    def __init__(self, api_key: str, prompt_path: str, history_file_path: str, model: str = "gemini-2.0-flash"):
         self.api_key = api_key
         self.client = genai.Client(api_key=self.api_key)
-        self.prompt = prompt
+        with open(prompt_path, "r", encoding="utf-8") as f:
+            self.prompt = f.read()
+        self.meta_data = None
         self.model = model
-        self.history_registory = history_registory.HistoryRegistory(history_file_path)
+        self.history_repository = history_repository.HistoryRepository(history_file_path)
     
     # メタ情報とシステムメッセージ、ユーザーからのメッセージを渡して返答を生成
-    def talk(self, metadata: str, system_msg: str = "", msg: str = ""):
-        chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=metadata+system_msg+self.prompt), history=self.history_registory.load())
-        res = chat.send_message(msg)
+    def talk(self, in_meta_data: str = None, system_msg: str = "", msg: str = ""):
+        if in_meta_data == None:
+            meta_data = self.meta_data
+        else:
+            meta_data = in_meta_data
+        fixed_system_msg = f"{{\"system_message\":\"{system_msg}\"}}"
+        chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=meta_data+self.prompt), history=self.history_repository.load())
+        #chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7), history=self.history_registory.load())
+        #print(meta_data+fixed_system_msg+self.prompt+msg)
+        res = chat.send_message(fixed_system_msg+msg)
         history = chat.get_history()
-        self.history_registory.save(history)
+        self.history_repository.save(history)
         return res.text
+    
+    # メタ情報を生成
+    def gen_meta_data(self):
+        meta_data = {"meta_data":[{"now_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}]}
+        self.meta_data = json.dumps(meta_data)

@@ -1,10 +1,10 @@
 import json
 import datetime
-import remind
+from features.remind import remind
 
 
 # Remindオブジェクトとjsonファイルを接続するユースケース
-class RemindRegistory():
+class RemindRepository():
     # コンストラクタ
     def __init__(self, file_path: str):
         self.file_path = file_path
@@ -25,7 +25,6 @@ class RemindRegistory():
         for i in data:
             remind_dict = remind.export_to_dict() 
             if i == remind_dict:
-                msg = i["name"]
                 data.remove(i)
             flag = 1
         if flag == 1:
