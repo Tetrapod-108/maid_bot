@@ -6,6 +6,7 @@ from pathlib import Path
 
 import task_list_cog
 import remind_cog
+import chat_cog
 
 import key
 
@@ -46,6 +47,14 @@ async def on_ready():
         history_file_path=HISTORY_FILE_PATH
         ),
         guild=discord.Object(GUILD_ID)    
+    )
+    await bot.add_cog(chat_cog.ChatCog(
+        bot=bot,
+        gemini_api_key=GEMINI_API_KEY,
+        prompt_path=PROMPT_PATH,
+        history_file_path=HISTORY_FILE_PATH
+        ),
+        guild=discord.Object(GUILD_ID)
     )
 
     #tree.clear_commands(guild=discord.Object(GUILD_ID))
