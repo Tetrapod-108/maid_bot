@@ -6,6 +6,8 @@ from discord import app_commands
 from features.task_list import task_repository
 from features.task_list import task
 from features.gemini import gemini_chat_service
+from features.multi_guild import guild_data_repository
+from features.multi_guild import guild_data
 
 import re
 import datetime
@@ -14,11 +16,12 @@ from pathlib import Path
 
 class TaskListCog(commands.Cog):
     # コンストラクタ
-    def __init__(self, bot, task_repo_file_path, gemini_api_key, prompt_path, history_file_path):
+    def __init__(self, bot, task_repo_file_path, gemini_api_key, prompt_path, history_file_path, guild_file_path):
         self.bot = bot
         self.task_repo = task_repository.TaskRepository(task_repo_file_path)
         self.gemini_service = gemini_chat_service.GeminiChatService(api_key=gemini_api_key, prompt_path=prompt_path, history_file_path=history_file_path)
         self.remind_task_list.start()
+        self.guild_repo = guild_data_repository.GuildDataRepository(file_path=guild_file_path)
 
 
     # タスクリストをリマインド
@@ -26,15 +29,26 @@ class TaskListCog(commands.Cog):
     async def remind_task_list(self):
         now = datetime.datetime.now()
         #now = datetime.datetime(year=2025, month=4, day=28, hour=21, minute=0)
-        if (now.hour == 21 and now.minute == 0) or (now.hour == 7 and now.minute == 0):
-            task_list = self.task_repo.get_all()
-            msg = ""
-            for task in task_list:
-                msg += f"・{task.format_to_str()}\n"
-            self.gemini_service.gen_meta_data()
-            msg2 = self.gemini_service.talk(system_msg=f"マスターが取り組むべき「{msg}」のようなタスクがあります。簡単な挨拶、簡単な気遣いの一文、タスクについての総括、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。残っているタスクは集中力が必要なものが多いです。適宜休憩を挟むと良いかと思います。")
-            ch = self.bot.get_channel(1319690391251062835)
-            await ch.send(content="<@702791485409722388>\n" + msg2 + "\n\n" + msg)
+        for guild_data in self.guild_repo.get_data():
+            if (now.hour == guild_data.h1 and now.minute == guild_data.m1) or (now.hour == guild_data.h2 and now.minute == guild_data.m2):
+                self.task_repo.edit_task_path(guild_id=guild_data.guild_id)
+                task_list = self.task_repo.get_all()
+                if task_list == []:
+                    msg2 = self.gemini_service.talk(guild_id=guild_data.guild_id, system_msg=f"マスターに、簡単な挨拶、簡単な気遣いの一文、タスクがすべて終わっていることを伝える、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。現在取り組むべきタスクはありません。お疲れ様でした。")
+                    ch = self.bot.get_channel(guild_data.ch_id)
+                    await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2)
+                    return 
+                msg = ""
+                for task in task_list:
+                    msg += f"・{task.format_to_str()}\n"
+                self.gemini_service.gen_meta_data()
+                msg2 = self.gemini_service.talk(guild_id=guild_data.guild_id, system_msg=f"マスターが取り組むべき「{msg}」のようなタスクがあります。簡単な挨拶、簡単な気遣いの一文、タスクについての総括、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。残っているタスクは集中力が必要なものが多いです。適宜休憩を挟むと良いかと思います。")
+                ch = self.bot.get_channel(guild_data.ch_id)
+                await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2 + "\n\n" + msg)
+
+    @remind_task_list.before_loop
+    async def before_loop(self):
+        await self.bot.wait_until_ready()
 
 
     # /add_taskコマンド
@@ -46,6 +60,7 @@ class TaskListCog(commands.Cog):
         format2 = r"([0-9]{1,2}):([0-9]{1,2})"
         if date == None or time == None:
             new_task = task.Task(name)
+            self.task_repo.edit_task_path()
             self.task_repo.add(task=new_task)
             self.gemini_service.gen_meta_data()
             msg = self.gemini_service.talk(system_msg=f"タスクリストに「{new_task.format_to_str()}」を追加してください。また、追加したタスクに触れて会話してください。リストの全体を表示する必要はありません。")
@@ -95,7 +110,4 @@ class TaskListCog(commands.Cog):
  
 
 if __name__ == "__main__":
-    task_list_cog = TaskListCog(bot="bot", task_repo_file_path=f"{Path(__file__).parent}/json/task.json")
-    #for task in task_list_cog.task_repo.get_all():
-    #    print(task.name)
-    task_list_cog.remind_task_list()
+    pass

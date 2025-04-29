@@ -27,7 +27,7 @@ class ChatCog(commands.Cog):
 
         # チャットに反応
         self.gemini_service.gen_meta_data()
-        res = self.gemini_service.talk(msg=msg.content)
+        res = self.gemini_service.talk(guild_id=msg.guild.id, msg=msg.content)
         await msg.reply(content = res)
 
 

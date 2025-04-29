@@ -6,7 +6,8 @@ import json
 class HistoryRepository:
     # コンストラクタ
     def __init__(self, file_path: str):
-        self.file_path = file_path
+        self.in_file_path = file_path
+        self.file_path = None
 
     # historyをjsonに保存
     def save(self, history: list):

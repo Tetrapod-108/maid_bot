@@ -5,7 +5,8 @@ from features.task_list import task
 class TaskRepository():
     # コンストラクタ
     def __init__(self, file_path: str):
-        self.file_path: str = file_path
+        self.in_file_path: str = file_path
+        self.file_path: str = None
     
     # Taskオブジェクトをデータベース(jsonファイル)に追記
     def add(self, task: task.Task):
@@ -38,3 +39,9 @@ class TaskRepository():
         for i in data:
             fixed_data.append(task.Task.import_from_dict(i))
         return fixed_data
+
+    # taskファイルのパスに与えられたGuildのidを代入する
+    def edit_task_path(self, guild_id):
+        before  = self.in_file_path
+        after = before.replace("XXX", f"{guild_id}")
+        self.file_path = after
