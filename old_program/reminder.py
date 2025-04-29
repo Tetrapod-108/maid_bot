@@ -5,7 +5,7 @@ from datetime import timedelta
 from typing import Union
 from pathlib import Path
 
-import gemini    
+import old_program.gemini as gemini    
 
 
 # 関数: add_reminder

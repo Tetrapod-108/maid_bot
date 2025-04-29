@@ -6,10 +6,10 @@ from datetime import datetime
 import re
 
 import key
-import gemini
+import old_program.gemini as gemini
 #import weather_forecast
-import task
-import reminder
+import old_program.task as task
+import old_program.reminder as reminder
 
 # botをインスタンス化
 bot = commands.Bot(command_prefix="", intents=discord.Intents.all())
