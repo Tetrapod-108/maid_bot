@@ -29,18 +29,22 @@ class RemindCog(commands.Cog):
         remind_list = self.remind_repo.search(date=now)
         if remind_list != []:
             for i in remind_list:
-                ch = self.bot.get_channel(int(i.ch))
+                ch = self.bot.get_channel(int(i.ch_id))
                 await ch.send(content=f"<@{i.user}>\n {i.name}")
                 self.remind_repo.remove(i)
+
+    @remind_loop.before_loop
+    async def before_loop(self):
+        await self.bot.wait_until_ready()
 
 
     # /add_remindコマンド
     @app_commands.command(name = "add_remind", description="リマインドを追加する")
     @app_commands.describe(time="リマインドする時間 例) 1d2h3m、13:00", msg="リマインドしたいメッセージ")
-    async def add_task(self, interaction: discord.Interaction, time: str, msg: str):
+    async def add_remind(self, interaction: discord.Interaction, time: str, msg: str):
         await interaction.response.defer()
         now = datetime.datetime.now()
-        rmd = remind.Remind(name=msg, date=now, user=str(interaction.user.id), ch=str(interaction.channel_id))
+        rmd = remind.Remind(name=msg, date=now, user=str(interaction.user.id), ch_id=str(interaction.channel_id))
         rmd.edit_date(in_date=time)
         self.remind_repo.add(rmd)
         self.gemini_service.gen_meta_data()

@@ -17,6 +17,7 @@ TASK_FILE_PATH = f"{Path(__file__).parent}/json/task.json"
 REMIND_FILE_PATH = f"{Path(__file__).parent}/json/remind.json"
 HISTORY_FILE_PATH = f"{Path(__file__).parent}/json/history.json"
 PROMPT_PATH = f"{Path(__file__).parent}/json/system_prompt_new.json"
+GUILD_FILE_PATH = f"{Path(__file__).parent}/json/guild_data.json"
 GEMINI_API_KEY = key.GEMINI_API_KEY
 DISCORD_BOT_TOKEN = key.DISCORD_BOT_TOKEN
 
@@ -35,7 +36,8 @@ async def on_ready():
         task_repo_file_path=TASK_FILE_PATH,
         gemini_api_key=GEMINI_API_KEY,
         prompt_path=PROMPT_PATH,
-        history_file_path=HISTORY_FILE_PATH
+        history_file_path=HISTORY_FILE_PATH,
+        guild_file_path=GUILD_FILE_PATH
         ),
         guild=discord.Object(GUILD_ID)
     )
