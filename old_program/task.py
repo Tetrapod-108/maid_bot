@@ -2,7 +2,7 @@ import datetime
 import json
 from pathlib import Path
 
-import gemini
+import old_program.gemini as gemini
 
 # 関数: remind_task
 # list_onlyがTrueの時、文を整えた状態でタスクリストを返す
