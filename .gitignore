@@ -1,6 +1,5 @@
 /json/
 /.venv/
-**/__pycache__/
-/__pycache__/
+__pycache__/
 /.vscode/
 key.py
