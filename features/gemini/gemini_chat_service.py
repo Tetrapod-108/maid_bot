@@ -30,7 +30,7 @@ class GeminiChatService:
         self.edit_history_path(guild_id=guild_id)
         chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=meta_data+self.prompt), history=self.history_repo.load())
         #chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7), history=self.history_registory.load())
-        #print(meta_data+fixed_system_msg+self.prompt+msg)
+        print(meta_data+fixed_system_msg+self.prompt+msg)
         res = chat.send_message(fixed_system_msg+msg)
         history = chat.get_history()
         self.history_repo.save(history)
@@ -38,8 +38,8 @@ class GeminiChatService:
     
     # メタ情報を生成
     def gen_meta_data(self):
-        meta_data = {"meta_data":[{"now_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}]}
-        self.meta_data = json.dumps(meta_data)
+        meta_data = f"{{\"meta_data\":[{{\"now_date\": {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}}}]}}"
+        self.meta_data = meta_data
 
     # ヒストリーファイルのパスに与えられたGuildのidを代入する
     def edit_history_path(self, guild_id):

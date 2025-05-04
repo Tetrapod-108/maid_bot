@@ -48,7 +48,7 @@ class RemindCog(commands.Cog):
         rmd.edit_date(in_date=time)
         self.remind_repo.add(rmd)
         self.gemini_service.gen_meta_data()
-        res = self.gemini_service.talk(system_msg = f"マスターに、{time}に「{msg}」と通知してください。現在時刻からの相対時間で時間を伝えてください。")
+        res = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg = f"マスターに、{time}に「{msg}」と通知してください。現在時刻からの相対時間で時間を伝えてください。")
         await interaction.followup.send(content = res, ephemeral = True)
  
 
