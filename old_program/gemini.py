@@ -4,7 +4,7 @@ from typing import List, Any
 import json
 from pathlib import Path
 
-import key
+import config.key as key
 
 with open(f"{Path(__file__).parent}/json/system_prompt.json", "r", encoding='utf-8') as f:
         PROMPT = f.read()

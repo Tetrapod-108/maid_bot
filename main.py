@@ -11,7 +11,7 @@ import chat_cog
 import config_cog
 import test_cog
 
-import key
+import config.key as key
 
 
 # 各種変数
@@ -19,7 +19,7 @@ TASK_FILE_PATH = f"{Path(__file__).parent/'data'/'XXX'/'task.json'}"
 REMIND_FILE_PATH = f"{Path(__file__).parent/'json'/'remind.json'}"
 HISTORY_FILE_PATH = f"{Path(__file__).parent/'data'/'XXX'/'history.json'}"
 #PROMPT_PATH = f"{Path(__file__).parent}/json/system_prompt_new.json"
-PROMPT_PATH = f"{Path(__file__).parent/'prompt.md'}"
+PROMPT_PATH = f"{Path(__file__).parent/'config'/'prompt.md'}"
 GUILD_FILE_PATH = f"{Path(__file__).parent/'json'/'guild_data.json'}"
 GEMINI_API_KEY = key.GEMINI_API_KEY
 DISCORD_BOT_TOKEN = key.DISCORD_BOT_TOKEN

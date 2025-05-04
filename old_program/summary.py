@@ -5,7 +5,7 @@ from typing import List, Any
 import json
 from pathlib import Path
 
-import key
+import config.key as key
 
 CONFIG = genai.types.GenerationConfig(temperature=0.1)
 PROMPT = "アシスタントAIとそのマスターの会話記録を示します。LLMのヒストリーに渡してやりとりの記憶を引き継ぐために、会話の内容を4000字以下に整理してください。LLMが認識しやすい書式で出力してください\n"

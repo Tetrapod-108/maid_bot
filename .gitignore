@@ -1,6 +1,8 @@
 /json/
-/.venv/
+/config/
 /data/
+
 __pycache__/
+
 /.vscode/
-key.py
+/.venv/

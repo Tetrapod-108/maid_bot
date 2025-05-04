@@ -5,7 +5,7 @@ from discord.ext import commands
 from datetime import datetime
 import re
 
-import key
+import config.key as key
 import old_program.gemini as gemini
 #import weather_forecast
 import old_program.task as task

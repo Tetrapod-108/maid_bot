@@ -3,7 +3,7 @@ from google.genai import types
 import json
 from pathlib import Path
 
-import key
+import config.key as key
 
 # Gemini APIのラッパー
 class GeminiChatService:
