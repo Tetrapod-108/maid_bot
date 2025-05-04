@@ -19,6 +19,7 @@ class TaskRepository():
     # 指定された名前のタスクを削除
     def remove(self, name: str):
         flag = 0
+        print(self.file_path)
         with open(self.file_path, "r") as f:
             data:list = json.load(f)
         for i in data:
