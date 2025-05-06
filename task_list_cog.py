@@ -126,6 +126,8 @@ class TaskDropdownView(discord.ui.View):
 
     async def callback(self, interaction: discord.Interaction):
         await self.origin_message.edit(view=None)
+        self.task_repo.edit_task_path(interaction.guild_id)
+        self.task_repo.remove(interaction.data["values"][0])
         self.gemini_service.gen_meta_data()
         content = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg=f"マスターのタスクリストから「{interaction.data["values"][0]}」を削除し、その旨をマスターに伝えてください。リストの全体を表示する必要はありません。")
         await interaction.channel.send(content=content)
