@@ -111,7 +111,7 @@ class TaskListCog(commands.Cog):
             msg += f"・{task.format_to_str()}\n"
         self.gemini_service.gen_meta_data()
         msg2 = self.gemini_service.talk(guild_id=interaction.guild_id, system_msg=f"マスターが取り組むべき「{msg}」のようなタスクがあります。簡単な挨拶、簡単な気遣いの一文、タスクについての総括、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。\n残っているタスクは集中力が必要なものが多いようですので、適宜休憩を挟むと良いかと思います。")
-        await interaction.followup.send(content = f"<@{interaction.user.id}>\n" + msg2 + "\n\n" + msg, ephemeral = True)
+        await interaction.followup.send(content = f"<@{interaction.user.id}>\n" + msg2 + "\n" + msg, ephemeral = True)
 
 
 class TaskDropdownView(discord.ui.View):
