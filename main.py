@@ -26,7 +26,13 @@ DISCORD_BOT_TOKEN = key.DISCORD_BOT_TOKEN
 
 
 # botをインスタンス化
-bot = commands.Bot(command_prefix="", intents=discord.Intents.all())
+intents = discord.Intents.default()
+intents.message_content = True
+intents.guild_messages = True
+intents.guild_reactions = True
+intents.emojis = True
+intents.members = True
+bot = commands.Bot(command_prefix="", intents=intents)
 tree = bot.tree
 
 # botの準備完了時に実行
