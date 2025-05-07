@@ -30,7 +30,7 @@ class TaskListCog(commands.Cog):
     @tasks.loop(seconds=60)
     async def remind_task_list(self):
         now = datetime.datetime.now()
-        #now = datetime.datetime(year=2025, month=4, day=28, hour=21, minute=0)
+        #now = datetime.datetime(year=2025, month=4, day=28, hour=7, minute=0)
         for guild_data in self.guild_repo.get_data():
             if (now.hour == guild_data.h1 and now.minute == guild_data.m1) or (now.hour == guild_data.h2 and now.minute == guild_data.m2):
                 self.task_repo.edit_task_path(guild_id=guild_data.guild_id)
@@ -46,7 +46,7 @@ class TaskListCog(commands.Cog):
                 self.gemini_service.gen_meta_data()
                 msg2 = self.gemini_service.talk(guild_id=guild_data.guild_id, system_msg=f"マスターが取り組むべき「{msg}」のようなタスクがあります。簡単な挨拶、簡単な気遣いの一文、タスクについての総括、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。残っているタスクは集中力が必要なものが多いです。適宜休憩を挟むと良いかと思います。")
                 ch = self.bot.get_channel(guild_data.ch_id)
-                await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2 + "\n\n" + msg)
+                await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2 + "\n" + msg)
 
     @remind_task_list.before_loop
     async def before_loop(self):
@@ -129,7 +129,7 @@ class TaskDropdownView(discord.ui.View):
         self.task_repo.edit_task_path(interaction.guild_id)
         self.task_repo.remove(interaction.data["values"][0])
         self.gemini_service.gen_meta_data()
-        content = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg=f"マスターのタスクリストから「{interaction.data["values"][0]}」を削除し、その旨をマスターに伝えてください。リストの全体を表示する必要はありません。")
+        content = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg=f"マスターのタスクリストから「{interaction.data['values'][0]}」を削除し、その旨をマスターに伝えてください。リストの全体を表示する必要はありません。")
         await interaction.channel.send(content=content)
 
 
