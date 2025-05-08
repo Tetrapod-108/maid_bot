@@ -4,6 +4,7 @@ from discord.ext import tasks
 from discord import app_commands
 
 from features.gemini import gemini_chat_service
+from features.multi_guild import guild_data_repository
 
 import re
 import datetime
@@ -22,7 +23,8 @@ class ChatCog(commands.Cog):
     async def on_message(self, msg: discord.Message):
         if msg.author == self.bot.user:
             return
-        if msg.channel.id != 1319690391251062835:
+        ch_list = 
+        if msg.channel.id not in ch_list:
             return
 
         # チャットに反応
