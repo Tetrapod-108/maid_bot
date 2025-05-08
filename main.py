@@ -93,7 +93,7 @@ async def on_ready():
 async def on_guild_join(guild):
     path = Path(f"{Path(__file__).parent}/data/{guild.id}")
     path.mkdir(parents=True, exist_ok=True)
-    with open(f"{path/'histoy.json'}", "w", encoding="utf-8") as f:
+    with open(f"{path/'history.json'}", "w", encoding="utf-8") as f:
         json.dump([], f, indent=4)
     with open(f"{path/'task.json'}", "w", encoding="utf-8") as f:
         json.dump([], f, indent=4)
