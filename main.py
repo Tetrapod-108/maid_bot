@@ -62,7 +62,8 @@ async def on_ready():
         bot=bot,
         gemini_api_key=GEMINI_API_KEY,
         prompt_path=PROMPT_PATH,
-        history_file_path=HISTORY_FILE_PATH
+        history_file_path=HISTORY_FILE_PATH,
+        guild_file_path=GUILD_FILE_PATH
         ),
         guilds=bot.guilds
     )
@@ -97,26 +98,6 @@ async def on_guild_join(guild):
         json.dump([], f, indent=4)
     with open(f"{path/'task.json'}", "w", encoding="utf-8") as f:
         json.dump([], f, indent=4)
-
-
-class SampleView(discord.ui.View):
-    def __init__(self, timeout=180):
-        super().__init__(timeout=timeout)
-
-    @discord.ui.select(
-        cls=discord.ui.Select,
-        placeholder="What is your favorite fruit?",
-        options=[
-            discord.SelectOption(label="Banana"),
-            discord.SelectOption(label="Apple"),
-            discord.SelectOption(label="Pineapple"),
-            discord.SelectOption(label="Grapefruit"),
-            discord.SelectOption(label="Orange"),
-        ]
-    )
-    async def select(self, interaction: discord.Interaction, select: discord.ui.Select):
-        await interaction.response.send_message(f"{interaction.user.mention} {select.values[0]}")
-        
 
 # tokenを読み込んでbotを起動
 bot.run(DISCORD_BOT_TOKEN)
