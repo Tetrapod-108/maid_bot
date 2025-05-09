@@ -12,7 +12,7 @@ class GuildDataRepository():
     # GuildDataの登録
     def register_data(self):
         return
-        
+
 
     # GuildDataのリストを取得
     def get_data(self) -> list:

@@ -23,7 +23,7 @@ class GeminiChatService:
     # メタ情報とシステムメッセージ、ユーザーからのメッセージを渡して返答を生成
     def talk(self, guild_id, in_meta_data: str = None, system_msg: str = "", msg: str = ""):
         if in_meta_data == None:
-            meta_data = self.meta_data
+            meta_data = self.gen_meta_data()
         else:
             meta_data = in_meta_data
         fixed_system_msg = f"{{\"system_message\":\"{system_msg}\"}}"
@@ -36,6 +36,20 @@ class GeminiChatService:
         self.history_repo.save(history)
         return res.text
     
+    def talk_for_diary(self, guild_id, in_meta_data: str = None, msg: str = ""):
+        if in_meta_data == None:
+            meta_data = self.gen_meta_data()
+        else:
+            meta_data = in_meta_data
+        system_msg = ""
+        fixed_system_msg = f"{{\"system_message\":\"{system_msg}\"}}"
+        self.edit_history_path(guild_id=guild_id)
+        chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=meta_data+self.prompt), history=self.history_repo.load())
+        res = chat.send_message(fixed_system_msg+msg)
+        history = chat.get_history()
+        self.history_repo.save(history)
+        return res.text
+
     # メタ情報を生成
     def gen_meta_data(self):
         meta_data = f"{{\"meta_data\":[{{\"now_date\": {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}}}]}}"
