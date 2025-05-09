@@ -60,3 +60,16 @@ class GeminiChatService:
         before  = self.history_repo.in_file_path
         after = before.replace("XXX", f"{guild_id}")
         self.history_repo.file_path = after
+
+"""
+from pathlib import Path
+
+if __name__ == "__main__":
+    client = genai.Client(api_key="")
+    with open(f"{Path(__file__).parent/"analyze_prompt.md"}", "r", encoding="utf-8") as f:
+        data = f.read()
+    config = types.GenerateContentConfig(system_instruction=data)
+    contents = "明日の天気は？"
+    res = client.models.generate_content(model='gemini-2.0-flash', config=config, contents=contents)
+    print(res.text)
+"""
