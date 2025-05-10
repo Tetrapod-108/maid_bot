@@ -9,7 +9,7 @@ from discord import app_commands
 class TestCog(commands.Cog):
     # コンストラクタ
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
 
 
     # /testコマンド

@@ -19,7 +19,7 @@ from pathlib import Path
 class TaskListCog(commands.Cog):
     # コンストラクタ
     def __init__(self, bot, task_repo_file_path, gemini_api_key, prompt_path, history_file_path, guild_file_path):
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.task_repo = task_repository.TaskRepository(task_repo_file_path)
         self.gemini_service = gemini_chat_service.GeminiChatService(api_key=gemini_api_key, prompt_path=prompt_path, history_file_path=history_file_path)
         self.remind_task_list.start()
@@ -38,15 +38,21 @@ class TaskListCog(commands.Cog):
                 if task_list == []:
                     msg2 = self.gemini_service.talk(guild_id=guild_data.guild_id, system_msg=f"マスターに、簡単な挨拶、簡単な気遣いの一文、タスクがすべて終わっていることを伝える、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。現在取り組むべきタスクはありません。お疲れ様でした。")
                     ch = self.bot.get_channel(guild_data.ch_id)
-                    await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2)
-                    return 
+                    try:
+                        await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2)
+                        return
+                    except:
+                        print("定刻通知の送信に失敗しました") 
                 msg = ""
                 for task in task_list:
                     msg += f"・{task.format_to_str()}\n"
                 self.gemini_service.gen_meta_data()
                 msg2 = self.gemini_service.talk(guild_id=guild_data.guild_id, system_msg=f"マスターが取り組むべき「{msg}」のようなタスクがあります。簡単な挨拶、簡単な気遣いの一文、タスクについての総括、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。残っているタスクは集中力が必要なものが多いです。適宜休憩を挟むと良いかと思います。")
                 ch = self.bot.get_channel(guild_data.ch_id)
-                await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2 + "\n" + msg)
+                try:
+                    await ch.send(content=f"<@{guild_data.user_id}>\n" + msg2 + "\n" + msg)
+                except:
+                    print("定刻通知の送信に失敗しました")
 
     @remind_task_list.before_loop
     async def before_loop(self):
