@@ -36,6 +36,7 @@ class TaskListCog(commands.Cog):
                 self.task_repo.edit_task_path(guild_id=guild_data.guild_id)
                 task_list = self.task_repo.get_all()
                 if task_list == []:
+                    self.gemini_service.gen_meta_data()
                     msg2 = self.gemini_service.talk(guild_id=guild_data.guild_id, system_msg=f"マスターに、簡単な挨拶、簡単な気遣いの一文、タスクがすべて終わっていることを伝える、という流れでマスターに話してください。リストの全体を表示する必要はありません。現在時刻に適した挨拶をしてください。例)おはようございます、マスター。現在取り組むべきタスクはありません。お疲れ様でした。")
                     ch = self.bot.get_channel(guild_data.ch_id)
                     try:
