@@ -45,10 +45,14 @@ class RemindCog(commands.Cog):
         await interaction.response.defer()
         now = datetime.datetime.now()
         rmd = remind.Remind(name=msg, date=now, user=str(interaction.user.id), ch_id=str(interaction.channel_id))
-        rmd.edit_date(in_date=time)
-        self.remind_repo.add(rmd)
-        self.gemini_service.gen_meta_data()
-        res = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg = f"マスターに、{time}に「{msg}」と通知してください。現在時刻からの相対時間で時間を伝えてください。")
+        try:
+            rmd.edit_date(in_date=time)
+            self.remind_repo.add(rmd)
+            self.gemini_service.gen_meta_data()
+            res = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg = f"マスターに、{time}に「{msg}」と通知してください。現在時刻からの相対時間で時間を伝えてください。")
+        except:
+            self.gemini_service.gen_meta_data()
+            res = self.gemini_service.talk(guild_id=interaction.guild.id, system_msg = f"マスターから受けた指示が間違っていることを伝えてください。")
         await interaction.followup.send(content = res, ephemeral = True)
  
 

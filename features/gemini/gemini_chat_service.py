@@ -38,7 +38,7 @@ class GeminiChatService:
     
     def talk_for_diary(self, guild_id, in_meta_data: str = None, msg: str = ""):
         if in_meta_data == None:
-            meta_data = self.gen_meta_data()
+            self.gen_meta_data()
         else:
             meta_data = in_meta_data
         system_msg = ""
