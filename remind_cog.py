@@ -15,7 +15,7 @@ from pathlib import Path
 class RemindCog(commands.Cog):
     # コンストラクタ
     def __init__(self, bot, remind_repo_file_path, gemini_api_key, prompt_path, history_file_path):
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.remind_repo = remind_repository.RemindRepository(remind_repo_file_path)
         self.gemini_service = gemini_chat_service.GeminiChatService(api_key=gemini_api_key, prompt_path=prompt_path, history_file_path=history_file_path)
         self.remind_loop.start()

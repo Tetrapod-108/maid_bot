@@ -23,7 +23,7 @@ class GeminiChatService:
     # メタ情報とシステムメッセージ、ユーザーからのメッセージを渡して返答を生成
     def talk(self, guild_id, in_meta_data: str = None, system_msg: str = "", msg: str = ""):
         if in_meta_data == None:
-            meta_data = self.gen_meta_data()
+            meta_data = f"{{\"meta_data\":[{{\"now_date\": {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}}}]}}"
         else:
             meta_data = in_meta_data
         fixed_system_msg = f"{{\"system_message\":\"{system_msg}\"}}"
