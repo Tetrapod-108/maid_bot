@@ -26,7 +26,8 @@ class GeminiChatService:
             meta_data = f"{{\"meta_data\":[{{\"now_date\": {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}}}]}}"
         else:
             meta_data = in_meta_data
-        fixed_system_msg = f"{{\"system_message\":\"{system_msg}\"}}"
+        if system_msg != "":
+            fixed_system_msg = f"{{\"system_message\":\"{system_msg}\"}}"
         self.edit_history_path(guild_id=guild_id)
         chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=meta_data+self.prompt), history=self.history_repo.load())
         #chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7), history=self.history_registory.load())
