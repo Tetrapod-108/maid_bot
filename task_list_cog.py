@@ -30,7 +30,7 @@ class TaskListCog(commands.Cog):
     @tasks.loop(seconds=60)
     async def remind_task_list(self):
         now = datetime.datetime.now()
-        now = datetime.datetime(year=2025, month=4, day=28, hour=7, minute=0)
+        #now = datetime.datetime(year=2025, month=4, day=28, hour=7, minute=0)
         for guild_data in self.guild_repo.get_data():
             if (now.hour == guild_data.h1 and now.minute == guild_data.m1) or (now.hour == guild_data.h2 and now.minute == guild_data.m2):
                 self.task_repo.edit_task_path(guild_id=guild_data.guild_id)
