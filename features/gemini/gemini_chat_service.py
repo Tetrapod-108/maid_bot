@@ -31,11 +31,14 @@ class GeminiChatService:
         chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7, system_instruction=meta_data+self.prompt), history=self.history_repo.load())
         #chat = self.client.chats.create(model = self.model, config = types.GenerateContentConfig(temperature=1.7), history=self.history_registory.load())
         #print(meta_data+fixed_system_msg+self.prompt+msg)
-        res = chat.send_message(fixed_system_msg+msg)
-        history = chat.get_history()
-        self.history_repo.save(history)
-        return res.text
-    
+        try:
+            res = chat.send_message(fixed_system_msg+msg)
+            history = chat.get_history()
+            self.history_repo.save(history)
+            return res.text
+        except:
+            return "申し訳ございません。\nエラーが発生しているようですので、少々お待ち下さい。"
+
     def talk_for_diary(self, guild_id, in_meta_data: str = None, msg: str = ""):
         if in_meta_data == None:
             self.gen_meta_data()
