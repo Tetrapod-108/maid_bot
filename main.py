@@ -32,7 +32,7 @@ intents.guild_messages = True
 intents.guild_reactions = True
 intents.emojis = True
 intents.members = True
-bot = commands.Bot(command_prefix="", intents=intents)
+bot = commands.Bot(command_prefix=",^", intents=intents)
 tree = bot.tree
 
 # botの準備完了時に実行
